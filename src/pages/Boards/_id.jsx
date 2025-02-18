@@ -23,9 +23,6 @@ import { cloneDeep } from "lodash";
 
 function Board() {
     const dispatch = useDispatch();
-
-    //Ko dùng State của component nữa mà chuyển sang dùng State của Redux
-    // const [board, setBoard] = useState(null);
     const board = useSelector(selectCurrentActiveBoard);
 
     useEffect(() => {
@@ -33,69 +30,6 @@ function Board() {
         //Call API
         dispatch(fetchBoardDetailsAPI(boardId));
     }, [dispatch]);
-
-    const createNewColumn = async (newColumnData) => {
-        const createdColumn = await createNewColumnAPI({
-            ...newColumnData,
-            boardId: board._id,
-        });
-
-        createdColumn.cards = [generatePlaceholderCard(createdColumn)];
-        createdColumn.cardOrderIds = [
-            generatePlaceholderCard(createdColumn)._id,
-        ];
-
-        //Update state board
-        /**
-         * Đoạn này sẽ dính lỗi object is not extensible bởi dù đã copy/clone ra giá trị newBoard nhưng bản chất
-         * của spread operator là Shallow Copy (copy nông), nên dính phải rules Immutability trong Redux toolkit không
-         * dùng đc hàm PUSH (sửa giá trị mảng trực tiếp), cách đơn giản nhanh gọn nhất ở trong trưởng hợp này của chúng ta
-         * là dùng tới Deep Copy toàn bộ cái Board cho dễ hiểu và code ngắn gọn.
-         */
-        // const newBoard = { ...board };
-        const newBoard = cloneDeep(board);
-        newBoard.columns.push(createdColumn);
-        newBoard.columnOrderIds.push(createdColumn._id);
-
-        /**
-         * Ngoài ra còn cách nữa là vẫn có thể dùng array.concat thay cho push như docs của Redux Toolkit ở trên vì
-         * push như đã nói nó sẽ thay đổi giá trị mảng trực tiếp, còn thằng concat thì nó merge - ghép mảng lại và
-         * tạo ra một mảng mới để chúng ra gán lại giá trị nên không vấn đề gì.
-         */
-        // const newBoard = { ...board };
-        // newBoard.columns = newBoard.columns.concat([createdColumn]);
-        // newBoard.columnOrderIds = newBoard.columnOrderIds.concat([
-        //     createdColumn._id,
-        // ]);
-
-        dispatch(updateCurrentActiveBoard(newBoard));
-    };
-
-    const createNewCard = async (newCardData) => {
-        const createdCard = await createNewCardAPI({
-            ...newCardData,
-            boardId: board._id,
-        });
-
-        //Update state board
-        // const newBoard = { ...board };
-        const newBoard = cloneDeep(board);
-
-        const columnToUpdate = newBoard.columns.find(
-            (column) => column._id === createdCard.columnId
-        );
-        if (columnToUpdate) {
-            // Nếu column rỗng: bản chất là đang chứa một cái Placeholder card
-            if (columnToUpdate.cards.some((card) => card.FE_PlaceholderCard)) {
-                columnToUpdate.cards = [createdCard];
-                columnToUpdate.cardOrderIds = [createdCard._id];
-            } else {
-                columnToUpdate.cards.push(createdCard);
-                columnToUpdate.cardOrderIds.push(createdCard._id);
-            }
-        }
-        dispatch(updateCurrentActiveBoard(newBoard));
-    };
 
     const moveColumns = (dndOrderedColumns) => {
         const dndOrderedColumnsIds = dndOrderedColumns.map((c) => c._id);
@@ -182,18 +116,7 @@ function Board() {
     };
 
     const deleteColumnDetails = (columnId) => {
-        //Update chuẩn dữ liệu state Board
-        const newBoard = { ...board };
-        newBoard.columns = newBoard.columns.filter((c) => c._id !== columnId);
-        newBoard.columnOrderIds = newBoard.columnOrderIds.filter(
-            (_id) => _id !== columnId
-        );
-        dispatch(updateCurrentActiveBoard(newBoard));
-
-        //Gọi API xử lí phía BE
-        deleteColumnDetailsAPI(columnId).then((res) => {
-            toast.success(res?.deleteResult);
-        });
+        
     };
 
     if (!board) {
@@ -221,12 +144,9 @@ function Board() {
                 <BoardBar board={board} />
                 <BoardContent
                     board={board}
-                    createdNewColumn={createNewColumn}
-                    createNewCard={createNewCard}
                     moveColumns={moveColumns}
                     moveCardInTheSameColumn={moveCardInTheSameColumn}
                     moveCardToDifferentColumn={moveCardToDifferentColumn}
-                    deleteColumnDetails={deleteColumnDetails}
                 />
             </Container>
         </>
