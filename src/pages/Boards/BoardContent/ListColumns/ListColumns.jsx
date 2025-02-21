@@ -98,10 +98,7 @@ function ListColumns({ columns }) {
                 }}
             >
                 {columns?.map((column) => (
-                    <Columns
-                        key={column._id}
-                        column={column}
-                    />
+                    <Columns key={column._id} column={column} />
                 ))}
 
                 {!openNewColumnForm ? (
@@ -175,6 +172,7 @@ function ListColumns({ columns }) {
                             }}
                         >
                             <Button
+                                className="interceptor-loading"
                                 onClick={() => addNewColumn()}
                                 variant="contained"
                                 color="success"

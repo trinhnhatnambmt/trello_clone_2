@@ -4,15 +4,10 @@ import BoardBar from "./BoardBar/BoardBar";
 import BoardContent from "./BoardContent/BoardContent";
 import { useEffect } from "react";
 import {
-    createNewCardAPI,
-    createNewColumnAPI,
-    deleteColumnDetailsAPI,
     updateBoardDetailsAPI,
     updateCardToDifferentColumnAPI,
     updateColumnDetailsAPI,
 } from "~/apis";
-import { generatePlaceholderCard } from "~/utils/formatters";
-import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import {
     fetchBoardDetailsAPI,
@@ -20,16 +15,17 @@ import {
     updateCurrentActiveBoard,
 } from "~/redux/activeBoard/activeBoardSlice";
 import { cloneDeep } from "lodash";
+import { useParams } from "react-router-dom";
 
 function Board() {
     const dispatch = useDispatch();
     const board = useSelector(selectCurrentActiveBoard);
+    const { boardId } = useParams();
 
     useEffect(() => {
-        const boardId = "67ac616146ae7a46ed2c44ae";
         //Call API
         dispatch(fetchBoardDetailsAPI(boardId));
-    }, [dispatch]);
+    }, [dispatch, boardId]);
 
     const moveColumns = (dndOrderedColumns) => {
         const dndOrderedColumnsIds = dndOrderedColumns.map((c) => c._id);
@@ -113,10 +109,6 @@ function Board() {
                 (c) => c._id === nextColumnId
             )?.cardOrderIds,
         });
-    };
-
-    const deleteColumnDetails = (columnId) => {
-        
     };
 
     if (!board) {
