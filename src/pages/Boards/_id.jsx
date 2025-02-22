@@ -16,6 +16,7 @@ import {
 } from "~/redux/activeBoard/activeBoardSlice";
 import { cloneDeep } from "lodash";
 import { useParams } from "react-router-dom";
+import PageLoadingSpinner from "~/components/Loading/PageLoadingSpinner";
 
 function Board() {
     const dispatch = useDispatch();
@@ -112,21 +113,7 @@ function Board() {
     };
 
     if (!board) {
-        return (
-            <Box
-                sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    gap: 2,
-                    width: "100vw",
-                    height: "100vh",
-                }}
-            >
-                <CircularProgress />
-                <Typography>Loading Board...</Typography>
-            </Box>
-        );
+        return <PageLoadingSpinner caption="Loading..." />;
     }
 
     return (
