@@ -33,7 +33,6 @@ function RegisterForm() {
     const navigate = useNavigate();
 
     const submitRegister = (data) => {
-        console.log("🚀 ~ submitRegister ~ data:", data);
         const { email, password } = data;
         toast
             .promise(registerUserAPI({ email, password }), {
