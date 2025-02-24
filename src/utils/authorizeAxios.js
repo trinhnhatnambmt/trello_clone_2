@@ -48,7 +48,7 @@ authorizedAxiosInstance.interceptors.response.use(
         if (error?.response?.data?.message) {
             errorMessage = error?.response?.data?.message;
         }
-        if (error?.response?.data?.status !== 410) {
+        if (error?.response?.status !== 410) {
             toast.error(errorMessage);
         }
 
