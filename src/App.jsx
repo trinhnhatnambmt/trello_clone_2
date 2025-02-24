@@ -31,9 +31,15 @@ function App() {
 
             {/* Protected Routes (Hiểu đơn giản trong dự án của chúng ta là các route chỉ cho truy cập sau khi đã login) */}
             <Route element={<ProtectedRoute user={currentUser} />}>
-                {/* Board Details */}
                 {/* <Outlet/> của react-router-dom sẽ chạy vào các child route trong này */}
+
+                {/* Board Details */}
                 <Route path="/boards/:boardId" element={<Board />} />
+
+                {/* User Settings */}
+                <Route path="/settings/account" element={} />
+                <Route path="/settings/security" element={} />
+
             </Route>
 
             {/* Authentication */}

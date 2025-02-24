@@ -9,7 +9,10 @@ import {
     MenuItem,
     Tooltip,
 } from "@mui/material";
+import { useConfirm } from "material-ui-confirm";
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { logoutUserAPI, selectCurrentUser } from "~/redux/user/userSlice";
 
 function Profile() {
     const [anchorEl, setAnchorEl] = useState(null);
@@ -20,6 +23,23 @@ function Profile() {
     const handleClose = () => {
         setAnchorEl(null);
     };
+
+    const dispatch = useDispatch();
+    const currentUser = useSelector(selectCurrentUser);
+    const confirmLogout = useConfirm();
+    const handleLogout = () => {
+        confirmLogout({
+            description: "Log out of your account?",
+            confirmationText: "Confirm",
+            cancellationText: "Cancel",
+            buttonOrder: ["confirm", "cancel"],
+        })
+            .then(() => {
+                dispatch(logoutUserAPI());
+            })
+            .catch(() => {});
+    };
+
     return (
         <Box>
             <Tooltip title="Account settings">
@@ -33,7 +53,7 @@ function Profile() {
                 >
                     <Avatar
                         sx={{ width: 30, height: 32 }}
-                        src="https://unsplash.com/photos/a-person-holding-a-nintendo-wii-game-controller-SCfDL1HxuEs"
+                        src={currentUser?.avatar}
                     ></Avatar>
                 </IconButton>
             </Tooltip>
@@ -42,22 +62,23 @@ function Profile() {
                 anchorEl={anchorEl}
                 open={open}
                 onClose={handleClose}
+                onClick={handleClose}
                 MenuListProps={{
                     "aria-labelledby": "basic-button-recent",
                 }}
             >
-                <MenuItem>
+                <MenuItem
+                    sx={{
+                        "&:hover": { color: "success.light" },
+                    }}
+                >
                     <Avatar
                         sx={{ width: 30, height: 32, marginRight: "5px" }}
+                        src={currentUser?.avatar}
                     />{" "}
                     Profile
                 </MenuItem>
-                <MenuItem>
-                    <Avatar
-                        sx={{ width: 30, height: 32, marginRight: "5px" }}
-                    />
-                    My account
-                </MenuItem>
+
                 <Divider />
                 <MenuItem>
                     <ListItemIcon>
@@ -71,9 +92,17 @@ function Profile() {
                     </ListItemIcon>
                     Settings
                 </MenuItem>
-                <MenuItem>
+                <MenuItem
+                    onClick={handleLogout}
+                    sx={{
+                        "&:hover": {
+                            color: "warning.dark",
+                            "& .logout-icon": { color: "warning.dark" },
+                        },
+                    }}
+                >
                     <ListItemIcon>
-                        <Logout fontSize="small" />
+                        <Logout className="logout-icon" fontSize="small" />
                     </ListItemIcon>
                     Logout
                 </MenuItem>
