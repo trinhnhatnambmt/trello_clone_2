@@ -20,6 +20,7 @@ export const loginUserAPI = createAsyncThunk(
     }
 );
 
+// Logout user
 export const logoutUserAPI = createAsyncThunk(
     "user/logoutUserAPI",
     async (showSuccessMessage = true) => {
@@ -29,6 +30,18 @@ export const logoutUserAPI = createAsyncThunk(
         if (showSuccessMessage) {
             toast.success("Logged out successfully");
         }
+        return response.data;
+    }
+);
+
+// Update user
+export const updateUserAPI = createAsyncThunk(
+    "user/updateUserAPI",
+    async (data) => {
+        const response = await authorizedAxiosInstance.put(
+            `${API_ROOT}/v1/users/update`,
+            data
+        );
         return response.data;
     }
 );
@@ -53,6 +66,10 @@ export const userSlice = createSlice({
             // API logout sau khi gọi thành công thì sẽ clear thông tin currentUser về null ở đây
             // Kết hợp ProtectedRoute đã làm ở App.js => code sẽ điều hướng chuẩn về trang login
             state.currentUser = null;
+        });
+        builder.addCase(updateUserAPI.fulfilled, (state, action) => {
+            const user = action.payload;
+            state.currentUser = user;
         });
     },
 });

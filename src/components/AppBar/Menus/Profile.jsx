@@ -12,6 +12,7 @@ import {
 import { useConfirm } from "material-ui-confirm";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 import { logoutUserAPI, selectCurrentUser } from "~/redux/user/userSlice";
 
 function Profile() {
@@ -67,17 +68,19 @@ function Profile() {
                     "aria-labelledby": "basic-button-recent",
                 }}
             >
-                <MenuItem
-                    sx={{
-                        "&:hover": { color: "success.light" },
-                    }}
-                >
-                    <Avatar
-                        sx={{ width: 30, height: 32, marginRight: "5px" }}
-                        src={currentUser?.avatar}
-                    />{" "}
-                    Profile
-                </MenuItem>
+                <Link to="/settings/account" style={{ color: "inherit" }}>
+                    <MenuItem
+                        sx={{
+                            "&:hover": { color: "success.light" },
+                        }}
+                    >
+                        <Avatar
+                            sx={{ width: 30, height: 32, marginRight: "5px" }}
+                            src={currentUser?.avatar}
+                        />{" "}
+                        Profile
+                    </MenuItem>
+                </Link>
 
                 <Divider />
                 <MenuItem>

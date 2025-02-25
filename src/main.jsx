@@ -3,6 +3,7 @@ import App from "./App.jsx";
 import CssBaseline from "@mui/material/CssBaseline";
 import { ThemeProvider } from "@mui/material/styles";
 import theme from "./theme";
+import GlobalStyles from "@mui/material/GlobalStyles";
 import { ToastContainer } from "react-toastify";
 import { ConfirmProvider } from "material-ui-confirm";
 import { Provider } from "react-redux";
@@ -36,6 +37,9 @@ createRoot(document.getElementById("root")).render(
                             },
                         }}
                     >
+                        <GlobalStyles
+                            styles={{ a: { textDecoration: "none" } }}
+                        />
                         <CssBaseline />
                         <App />
                         <ToastContainer />
