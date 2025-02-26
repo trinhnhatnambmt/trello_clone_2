@@ -23,13 +23,18 @@ import { CSS } from "@dnd-kit/utilities";
 import CloseIcon from "@mui/icons-material/Close";
 import { toast } from "react-toastify";
 import { useConfirm } from "material-ui-confirm";
-import { createNewCardAPI, deleteColumnDetailsAPI } from "~/apis";
+import {
+    createNewCardAPI,
+    deleteColumnDetailsAPI,
+    updateColumnDetailsAPI,
+} from "~/apis";
 import { cloneDeep } from "lodash";
 import {
     selectCurrentActiveBoard,
     updateCurrentActiveBoard,
 } from "~/redux/activeBoard/activeBoardSlice";
 import { useDispatch, useSelector } from "react-redux";
+import ToggleFocusInput from "~/components/Form/ToggleFocusInput";
 
 function Column({ column }) {
     const {
@@ -138,6 +143,20 @@ function Column({ column }) {
             .catch(() => {});
     };
 
+    const onUpdateColumnTitle = (newTitle) => {
+        // Gọi API update Column và xử lí dữ liệu board
+        updateColumnDetailsAPI(column._id, { title: newTitle }).then(() => {
+            const newBoard = cloneDeep(board);
+            const columnToUpdate = newBoard.columns.find(
+                (c) => c._id === column._id
+            );
+            if (columnToUpdate) {
+                columnToUpdate.title = newTitle;
+            }
+            dispatch(updateCurrentActiveBoard(newBoard));
+        });
+    };
+
     return (
         //Phải bọc div ở ngoài vì vấn đề chiều cao của column khi kéo thả sẽ có bug kiểu flickering
         <div ref={setNodeRef} style={dndKitColumnStyles} {...attributes}>
@@ -167,7 +186,7 @@ function Column({ column }) {
                         justifyContent: "space-between",
                     }}
                 >
-                    <Typography
+                    {/* <Typography
                         variant="h6"
                         sx={{
                             fontWeight: "bold",
@@ -176,7 +195,12 @@ function Column({ column }) {
                         }}
                     >
                         {column?.title}
-                    </Typography>
+                    </Typography> */}
+                    <ToggleFocusInput
+                        value={column?.title}
+                        onChangedValue={onUpdateColumnTitle}
+                        data-no-dnd="true"
+                    />
                     <Box>
                         <Tooltip title="More options">
                             <ExpandMoreIcon
