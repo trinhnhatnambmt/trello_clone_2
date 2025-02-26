@@ -15,6 +15,13 @@ export const updateBoardDetailsAPI = async (boardId, updateData) => {
     return response.data;
 };
 
+export const fetchBoardsAPI = async (searchPath) => {
+    const response = await authorizedAxiosInstance.get(
+        `${API_ROOT}/v1/boards${searchPath}`
+    );
+    return response.data;
+};
+
 // Columns
 export const createNewColumnAPI = async (newColumnData) => {
     const response = await authorizedAxiosInstance.post(
