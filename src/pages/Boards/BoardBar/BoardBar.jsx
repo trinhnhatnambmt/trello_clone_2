@@ -5,6 +5,7 @@ import FilterListIcon from "@mui/icons-material/FilterList";
 import { AddToDrive, AutoAwesome } from "@mui/icons-material";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import { capitalizeFirstLetter } from "~/utils/formatters";
+import BoardUserGroup from "./BoardUserGroup";
 
 const MERN_STYLES = {
     color: "white",
@@ -78,48 +79,8 @@ function BoardBar({ board }) {
                 >
                     Invite
                 </Button>
-
-                <AvatarGroup
-                    max={4}
-                    sx={{
-                        "& .MuiAvatar-root": {
-                            width: 34,
-                            height: 34,
-                            fontSize: 16,
-                        },
-                    }}
-                >
-                    <Tooltip title="Avatar">
-                        <Avatar
-                            alt="Remy Sharp"
-                            src="/static/images/avatar/1.jpg"
-                        />
-                    </Tooltip>{" "}
-                    <Tooltip title="Avatar">
-                        <Avatar
-                            alt="Remy Sharp"
-                            src="/static/images/avatar/1.jpg"
-                        />
-                    </Tooltip>{" "}
-                    <Tooltip title="Avatar">
-                        <Avatar
-                            alt="Remy Sharp"
-                            src="/static/images/avatar/1.jpg"
-                        />
-                    </Tooltip>{" "}
-                    <Tooltip title="Avatar">
-                        <Avatar
-                            alt="Remy Sharp"
-                            src="/static/images/avatar/1.jpg"
-                        />
-                    </Tooltip>{" "}
-                    <Tooltip title="Avatar">
-                        <Avatar
-                            alt="Remy Sharp"
-                            src="/static/images/avatar/1.jpg"
-                        />
-                    </Tooltip>
-                </AvatarGroup>
+                {/* Xử lý hiển thị danh sách thành viên */}
+                <BoardUserGroup />
             </Box>
         </Box>
     );
