@@ -1,4 +1,4 @@
-import { Avatar, AvatarGroup, Box, Button, Chip, Tooltip } from "@mui/material";
+import { Box, Button, Chip, Tooltip } from "@mui/material";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import VpnLockIcon from "@mui/icons-material/VpnLock";
 import FilterListIcon from "@mui/icons-material/FilterList";
@@ -80,7 +80,7 @@ function BoardBar({ board }) {
                     Invite
                 </Button>
                 {/* Xử lý hiển thị danh sách thành viên */}
-                <BoardUserGroup />
+                <BoardUserGroup boardUsers={board?.FE_allUsers} />
             </Box>
         </Box>
     );

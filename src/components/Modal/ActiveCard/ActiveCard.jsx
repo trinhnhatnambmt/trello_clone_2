@@ -25,7 +25,6 @@ import SubjectRoundedIcon from "@mui/icons-material/SubjectRounded";
 import DvrOutlinedIcon from "@mui/icons-material/DvrOutlined";
 
 import ToggleFocusInput from "~/components/Form/ToggleFocusInput";
-import VisuallyHiddenInput from "~/components/Form/VisuallyHiddenInput";
 import { singleFileValidator } from "~/utils/validators";
 import { toast } from "react-toastify";
 import CardUserGroup from "./CardUserGroup";
@@ -41,6 +40,8 @@ import {
     updateCurrentActiveCard,
 } from "~/redux/activeCard/activeCardSlice";
 import { updateCardDetailsAPI } from "~/apis";
+import { updateCardInBoard } from "~/redux/activeBoard/activeBoardSlice";
+import VisuallyHiddenInput from "~/components/Form/VisuallyHiddenInput";
 const SidebarItem = styled(Box)(({ theme }) => ({
     display: "flex",
     alignItems: "center",
@@ -86,6 +87,7 @@ function ActiveCard() {
         dispatch(updateCurrentActiveCard(updatedCard));
 
         // B2: Cập nhật lại cái bản ghi trong cái activeBoard (nested data)
+        dispatch(updateCardInBoard(updatedCard));
 
         return updatedCard;
     };
@@ -95,6 +97,13 @@ function ActiveCard() {
         // Gọi API...
         callApiUpdateCard({
             title: newTitle.trim(),
+        });
+    };
+
+    const onUpdateCardDescription = (newDescription) => {
+        // Gọi API...
+        callApiUpdateCard({
+            description: newDescription,
         });
     };
 
@@ -109,6 +118,12 @@ function ActiveCard() {
         reqData.append("cardCover", event.target?.files[0]);
 
         // Gọi API...
+        toast.promise(
+            callApiUpdateCard(reqData).finally(() => (event.target.value = "")),
+            {
+                pending: "Updating...",
+            }
+        );
     };
 
     return (
@@ -184,7 +199,15 @@ function ActiveCard() {
                     />
                 </Box>
 
-                <Grid2 container spacing={2} sx={{ mb: 3 }}>
+                <Grid2
+                    container
+                    spacing={3}
+                    sx={{
+                        mb: 3,
+                        display: "flex",
+                        justifyContent: "space-between",
+                    }}
+                >
                     {/* Left side */}
                     <Grid2 xs={12} sm={9}>
                         <Box sx={{ mb: 3 }}>
@@ -220,7 +243,12 @@ function ActiveCard() {
                             </Box>
 
                             {/* Feature 03: Xử lý mô tả của Card */}
-                            <CardDescriptionMdEditor />
+                            <CardDescriptionMdEditor
+                                cardDescriptionProp={activeCard?.description}
+                                handleUpdateCardDescription={
+                                    onUpdateCardDescription
+                                }
+                            />
                         </Box>
 
                         <Box sx={{ mb: 3 }}>
