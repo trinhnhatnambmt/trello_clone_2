@@ -16,13 +16,13 @@ import WorkSpaces from "./Menus/WorkSpaces";
 import Recent from "./Menus/Recent";
 import Starred from "./Menus/Starred";
 import Templates from "./Menus/Templates";
-import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import Profile from "./Menus/Profile";
 import SearchIcon from "@mui/icons-material/Search";
 import CloseIcon from "@mui/icons-material/Close";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import Notifications from "./Notifications/Notifications";
 function AppBar() {
     const [searchValue, setSearchValue] = useState("");
     return (
@@ -129,13 +129,9 @@ function AppBar() {
                     }}
                 />
                 <ModeSelect />
-                <Tooltip title="Notification" sx={{ cursor: "pointer" }}>
-                    <IconButton>
-                        <Badge color="error" variant="dot">
-                            <NotificationsNoneIcon sx={{ color: "white" }} />
-                        </Badge>
-                    </IconButton>
-                </Tooltip>
+
+                {/* Xử lí hiển thị các thông báo  */}
+                <Notifications />
                 <Tooltip title="Notification" sx={{ cursor: "pointer" }}>
                     <IconButton>
                         <HelpOutlineIcon sx={{ color: "white" }} />
