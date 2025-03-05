@@ -19,6 +19,7 @@ import {
     selectCurrentNotifications,
     updateBoardInvitationAPI,
 } from "~/redux/notifications/notificationsSlice";
+import { socketIoInstance } from "~/main";
 
 const BOARD_INVITATION_STATUS = {
     PENDING: "PENDING",
@@ -43,6 +44,21 @@ function Notifications() {
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(fetchInvitationsAPI());
+
+        // Tạo một function xử lí khi nhận được sự kiện real time, doc hướng dẫn:
+        //https://socket.io/how-to/use-with-react
+        const onReceiveNewInvitation = () => {};
+
+        // Lắng nghe một cái sự kiện real-time có tên là: BE_USER_INVITED_TO_BOARD từ phía server gửi về
+        socketIoInstance.on("BE_USER_INVITED_TO_BOARD", onReceiveNewInvitation);
+
+        // Clean up sự kiện để chúng ta ngăn chặn việc đăng ký lặp lại event: https://socket.io/how-to/use-with-react#cleanup
+        return () => {
+            socketIoInstance.off(
+                "BE_USER_INVITED_TO_BOARD",
+                onReceiveNewInvitation
+            );
+        };
     }, [dispatch]);
 
     // Cập nhật trạng thái - status của một lời mời join Board

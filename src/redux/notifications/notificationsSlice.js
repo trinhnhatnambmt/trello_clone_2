@@ -39,7 +39,7 @@ export const notificationsSlice = createSlice({
         addNotification: (state, action) => {
             const incomingInvitation = action.payload;
             // unshift là thêm phần tử vào đầu mảng, ngược lại với push
-            state.currentNotifications.unshift(incomingInvitation);
+            state.currentNotifications.unshift(incomingInvitation); 
         },
     },
     extraReducers: (builder) => {
